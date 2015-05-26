@@ -1,0 +1,114 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+/**
+ * Cartesian coordinate plane holding Index values at nodes
+ * 
+ * @author Cory Atwater & Amador Lagunas
+ * @version May 2015
+ */
+public class Plane
+{
+    private Index[][] map;
+    /**
+     * Constructor for objects of class Plane
+     */
+    public Plane(int xDim, int yDim)
+    {
+        map = new Index[xDim][yDim];
+        //fills in map
+        for(int row = 0; row < xDim; row++)
+        {
+            for(int col = 0; col < yDim; col++)
+            {
+                map[row][col] = new Index(row,col,map.length);
+                if(map[row][col].getX() == 0 || map[row][col].getY() == 0)
+                {
+                    map[row][col].setAsciiVal("# ");
+                }
+            }
+        }
+    }
+
+    public void printThing(){
+        for(int row = 0; row < map.length; row++)
+        {
+            for(int col = 0; col < map.length; col++)
+            {
+                System.out.print("(" + map[col][row].getX() + ", " + map[col][row].getY() + ")");
+            }
+            System.out.println();
+            System.out.println();
+        }
+    }
+    /** 
+     * prints an ascii representation of the maze
+       */
+    public void printThingWithAscii(){
+        long now = System.currentTimeMillis();
+        for(int row = 0; row < map.length; row++)
+        {
+            for(int col = 0; col < map.length; col++)
+            {
+                System.out.print(map[row][col].getAsciiVal());
+           }
+            System.out.println();
+        }
+        long then = System.currentTimeMillis();
+        System.out.println(then-now);
+    }
+    
+    /**
+     * makes a barrier at specified index
+     * 
+     */
+    public void makeBarrier(int x, int y)
+    {
+        map[x][y].setAsciiVal("# ");
+    }
+    
+    /**
+     * clears a barrier at specified index
+     * 
+     */
+    public void clearBarrier(int x, int y)
+    {
+        map[x][y].setAsciiVal("  ");
+    }
+    
+    /**
+     * makes a barrier at specified index
+     * 
+     */
+    private void markPath(int x, int y)
+    {
+        map[x][y].setAsciiVal("P ");
+    }
+
+    /**
+     * Returns indices
+     * @param int x and int y locations of index to be returned
+     * @return Index at location (x,y)
+     */
+    public Index getIndex(int x, int y)
+    {
+        return map[x][y];
+    }
+    /**
+     * gets length of the plane
+     */
+    public int getMaxX()
+    {
+        return map.length;
+    }
+    
+    public void solve()
+    {
+        Solver letsDoThis = new Solver(this);
+        ArrayList<Index> path = letsDoThis.solveMaze();
+        for(int i = 0; i < path.size(); i++)
+        {
+            this.markPath(path.get(i).getX(), path.get(i).getY());
+        }
+    }
+    
+}
