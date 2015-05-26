@@ -1,0 +1,91 @@
+import java.util.ArrayList;
+/**
+ * Solves maze in a Plane object
+ * 
+ * @Cory Atwater
+ * @May 2015
+ */
+public class Solver
+{
+    // instance variables - replace the example below with your own
+    private Plane map;
+    /**
+     * Constructor for objects of class Solver
+     */
+    public Solver(Plane map)
+    {
+        this.map = map;
+
+    }
+
+    /**
+     * An example of a method - replace this comment with your own
+     * 
+     * @param  y   a sample parameter for a method
+     * @return     An index array in order of the values that must be visited.
+     */
+    public ArrayList<Index> solveMaze()
+    {
+        // this is used for: method getAdjacent
+        long solveNow = System.currentTimeMillis();
+        SolverHelper helper = new SolverHelper(map);
+        ArrayList<Index> path = new ArrayList<Index>();
+        Index start = new Index(1,1,0);
+        path.add(start);
+        boolean solved = false;
+        Index lastIndex = new Index(1,1,0);
+        while( !solved)
+        {
+            Index presentIndex = new Index(lastIndex.getX(),lastIndex.getY(),0);
+            Index[] presAdj = helper.getAdjacent(presentIndex);
+            int[] xHeuristics = new int[8];
+            int[] yHeuristics = new int[8];
+            for(int i = 0; i < 8; i++)
+            {
+                if(presAdj[i] != null)
+                {
+                    Index adj = presAdj[i];
+                    int comp1 = adj.getX();
+                    int comp2 = adj.getY();
+                    xHeuristics[i] = comp1;
+                    yHeuristics[i] = comp2;
+                    continue;
+                }
+                xHeuristics[i] = 1000;
+                yHeuristics[i] = 1000;
+            }
+            int targetX = map.getMaxX()-2;
+            int targetY = map.getMaxX()-2;
+            int[] discrepancies = new int[8];
+            for(int i = 0; i < 8; i++)
+            {
+                int xSum = Math.abs(targetX - xHeuristics[i]);
+                int ySum = Math.abs(targetY - yHeuristics[i]);
+                discrepancies[i] = xSum + ySum;
+            }
+            //position of smallest discrepancy
+            int pos = 0;
+            for(int i = 0; i < 8; i++)
+            {
+                if(discrepancies[i] < discrepancies[pos])
+                {
+                    pos = i;
+                }
+                if(discrepancies[pos] == 0)
+                {
+                    solved = true;
+                }
+            }
+            lastIndex = new Index(presAdj[pos].getX(),presAdj[pos].getY(),map.getMaxX());
+            path.add(lastIndex);
+        }
+        long printNow = System.currentTimeMillis();
+        for(int i = 0; i < path.size(); i++)
+        {
+            System.out.println(path.get(i).toString());
+        }
+        long then = System.currentTimeMillis();
+        System.out.println("To solve: " + (printNow-solveNow) +"\nTo print: " + (then-printNow) + "\nIn total: " + (then-solveNow));
+        return path;
+    }
+}
