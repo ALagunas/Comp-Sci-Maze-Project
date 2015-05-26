@@ -1,0 +1,80 @@
+import java.util.Arrays;
+/**
+ * Aids solver class with helpful methods
+ * 
+ * @author Cory 
+ * @version 2015
+ */
+public class SolverHelper
+{
+    private Plane map;
+    /**
+     * Constructor for objects of class SolverHelper
+     */
+    public SolverHelper(Plane map)
+    {
+        this.map = map;
+    }
+
+    /**
+     * @return     Get adjacent values to present returned in an array of Index
+     */
+    public Index[] getAdjacent(Index present)
+    {
+        Index[] returnArr = new Index[8];
+        int x = present.getX();
+        int y = present.getY();
+        Index topLeft = map.getIndex(x-1, y-1);
+        if(topLeft.getAsciiVal().equals("# "))
+        {
+            topLeft = null;
+        }
+        returnArr[0] = topLeft;
+        Index topMid = map.getIndex(x, y-1);
+        if(topMid.getAsciiVal().equals("# "))
+        {
+            topMid = null;
+        }
+        returnArr[1] = topMid;
+        Index topRight = map.getIndex(x+1, y-1);
+        if(topRight.getAsciiVal().equals("# "))
+        {
+            topRight = null;
+        }
+        returnArr[2] = topRight;
+        Index midLeft = map.getIndex(x-1, y);
+        if(midLeft.getAsciiVal().equals("# "))
+        {
+            midLeft = null;
+        }
+        returnArr[3] = midLeft;
+        Index midRight = map.getIndex(x+1, y);
+        if(midRight.getAsciiVal().equals("# "))
+        {
+            midRight = null;
+        }
+        returnArr[4] = midRight;
+        Index botLeft = map.getIndex(x-1, y+1);
+        if(botLeft.getAsciiVal().equals("# "))
+        {
+            botLeft = null;
+        }
+        returnArr[5] = botLeft;
+        Index botMid = map.getIndex(x, y+1);
+        if(botMid.getAsciiVal().equals("# "))
+        {
+            botMid = null;
+        }
+        returnArr[6] = botMid;
+        Index botRight = map.getIndex(x+1, y+1);
+        if(botRight.getAsciiVal().equals("# "))
+        {
+            botRight = null;
+        }
+        returnArr[7] = botRight;
+        
+        System.out.println(Arrays.toString(returnArr));
+        return returnArr;
+
+    }
+}
