@@ -1,0 +1,69 @@
+/**
+ * Holds index x and y values for cooirdinates in plane
+ * 
+ * @author Cory Atwater & Amador Lagunas
+ * @version May 2015
+ */
+public class Index
+{
+    // X and Y value of this Index
+    private int x;
+    private int y;
+    private String asciiRep = "  ";
+    private int max;
+    /**
+     * Constructs Index object containing an X and Y value
+     * @param X and Y values of coordinate in plane
+     */
+
+    public Index(int X, int Y, int max)
+    {
+        // initialise instance variables
+        this.x = X;
+        this.y = Y;
+        this.max = max;
+        if(x == 0 || y == 0){
+            asciiRep = "# ";
+        }
+        if(x == max-1 || y == max-1){
+            asciiRep = "# ";
+        }
+    }
+
+    /**
+     * @return  y index
+     */
+    public int getY()
+    {
+        return this.y;
+    }
+
+    /**
+     * @return  x index
+     */
+    public int getX()
+    {
+        return this.x;
+    }
+    
+    /**
+     * @return  x index
+     */
+    public String getAsciiVal()
+    {
+        return asciiRep;
+    }
+    
+    /**
+     * @return  x index
+     */
+    public void setAsciiVal(String in)
+    {
+        asciiRep = in;
+    }
+    
+    @Override
+    public String toString(){
+        return "(" + x + "," + y + ")";
+    }
+}
