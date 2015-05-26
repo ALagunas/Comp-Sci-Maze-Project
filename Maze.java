@@ -235,7 +235,7 @@ public class Maze
             }
         }
         // wait one millisecond before doing anything else
-        StdDraw.show(1);
+        StdDraw.show(1000);
     }
 
     // a test client
