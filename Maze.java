@@ -6,7 +6,7 @@
  * Turn on off delay on solve and draw (1000 and 30 milliseconds)
  * Test Cory's algorithm for speed and compare
  * Possibly test broad search for speed and compare
-*/
+ */
 public class Maze
 {
     private int N;                  // dimension of maze, N by N
@@ -19,13 +19,16 @@ public class Maze
 
     public Maze(int N)
     {
+        // set variable N to parameter N
         this.N = N;
+        // set the size of the image to N + 2 by N + 2
         StdDraw.setXscale(0, N+2);
         StdDraw.setYscale(0, N+2);
+        // initialize the maze values
         init();
+        // generate the maze, drawing not included
         generate();
     }
-
     private void init()
     {
         // initialize border cells as already visited
@@ -63,6 +66,7 @@ public class Maze
             while (true)
             {
                 double r = Math.random();
+                //knock down a random wall, continue from that cell
                 if (r < 0.25 && !visited[x][y+1])
                 {
                     north[x][y] = south[x][y+1] = false;
@@ -92,8 +96,10 @@ public class Maze
     }
 
     // generate the maze starting from lower left
-    private void generate() {
+    private void generate()
+    {
         generate(1, 1);
+        // not mine idk wat up
         /*
         // delete some random walls
         for (int i = 0; i < N; i++) {
@@ -120,68 +126,130 @@ public class Maze
         {
             return;
         }
-        // if you have found the center or the whole thing has been visited
+        // if you have found the center or you have already visited the cell don't do anything
         if (done || visited[x][y])
         {
             return;
         }
+        // mark this cell as visited
         visited[x][y] = true;
-
+        // set the drawing color to blue
         StdDraw.setPenColor(StdDraw.BLUE);
+        // draw a circle where you are with radius 0.25
         StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
+        // wait 30 milliseconds before doing anything else
         StdDraw.show(30);
-
         // reached middle which is the solution
-        if (x == N/2 && y == N/2) done = true;
-
-        if (!north[x][y]) solve(x, y + 1);
-        if (!east[x][y])  solve(x + 1, y);
-        if (!south[x][y]) solve(x, y - 1);
-        if (!west[x][y])  solve(x - 1, y);
-
-        if (done) return;
-
+        if (x == N/2 && y == N/2) 
+        {
+            done = true;
+        }
+        // if there is no wall to the north, go there, then solve from there
+        if (!north[x][y])
+        {
+            solve(x, y + 1);
+        }
+        // if there is no wall to the east, go there, then solve from there
+        if (!east[x][y])
+        {
+            solve(x + 1, y);
+        }
+        // if there is no wall to the south, go there, then solve from there
+        if (!south[x][y])
+        {
+            solve(x, y - 1);
+        }
+        // if there is no wall to the west, go there, then solve from there
+        if (!west[x][y])
+        {
+            solve(x - 1, y);
+        }
+        // if this is the solution (you have reached the center), you are done
+        if (done)
+        {
+            return;
+        }
+        // if you come back to this cirle, draw a gray circle over it because it isn't in the solution
+        // set the drawing color to gray
         StdDraw.setPenColor(StdDraw.GRAY);
+        // draw a gray circle at your position with radius 0.25
         StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
+        // wait 30 milliseconds before doing anything else
         StdDraw.show(30);
     }
 
     // solve the maze starting from the start state
     public void solve()
     {
+        // reset the maze
+        // set all cells to unvisited
         for (int x = 1; x <= N; x++)
+        {
             for (int y = 1; y <= N; y++)
+            {
                 visited[x][y] = false;
+            }
+        }
+        // have not reached the center yet
         done = false;
+        // solve starting from the lower left
         solve(1, 1);
     }
 
     // draw the maze
     public void draw()
     {
+        // set the drawing color to red
         StdDraw.setPenColor(StdDraw.RED);
+        // draw a red circle in the center of the maze, the end
         StdDraw.filledCircle(N/2.0 + 0.5, N/2.0 + 0.5, 0.375);
+        // draw another red circle at the bottom left, the start
         StdDraw.filledCircle(1.5, 1.5, 0.375);
-
+        // set the drawing color to black
         StdDraw.setPenColor(StdDraw.BLACK);
-        for (int x = 1; x <= N; x++) {
-            for (int y = 1; y <= N; y++) {
-                if (south[x][y]) StdDraw.line(x, y, x + 1, y);
-                if (north[x][y]) StdDraw.line(x, y + 1, x + 1, y + 1);
-                if (west[x][y])  StdDraw.line(x, y, x, y + 1);
-                if (east[x][y])  StdDraw.line(x + 1, y, x + 1, y + 1);
+        // draw the walls of the maze
+        for (int x = 1; x <= N; x++)
+        {
+            for (int y = 1; y <= N; y++)
+            {
+                // if there is a wall between this cell and it south, draw a wall there
+                if (south[x][y])
+                {
+                    StdDraw.line(x, y, x + 1, y);
+                }
+                // if there is a wall between this cell and it north, draw a wall there
+                if (north[x][y])
+                {
+                    StdDraw.line(x, y + 1, x + 1, y + 1);
+                }
+                // if there is a wall between this cell and it west, draw a wall there
+                if (west[x][y])
+                {
+                    StdDraw.line(x, y, x, y + 1);
+                }
+                // if there is a wall between this cell and it east, draw a wall there
+                if (east[x][y])
+                {
+                    StdDraw.line(x + 1, y, x + 1, y + 1);
+                }
             }
         }
+        // wait one millisecond before doing anything else
         StdDraw.show(1);
     }
 
     // a test client
     public static void main(String[] args)
     {
+        // store the input number as N
         int N = Integer.parseInt(args[0]);
+        // make a new maze that is n rows by n columns
         Maze maze = new Maze(N);
+        // draw the initial array of walls
         StdDraw.show(0);
+        // draws the actual maze
         maze.draw();
+        // solve the maze, including drawing (within solve)
         maze.solve();
     }
 
