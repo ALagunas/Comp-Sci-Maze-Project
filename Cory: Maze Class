@@ -1,0 +1,55 @@
+import java.util.Scanner;
+/**
+ * Write a description of class Maze here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Maze
+{
+    private Plane yelf;
+    /**
+     * Constructor for objects of class Maze
+     */
+    public Maze()
+    {
+    }
+    
+    /** 
+     * 
+     * @return gives back a plane from the string input
+     */
+    public void parseMaze()
+    {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Draw maze below. Must be regular (dimensions IxI). Walls made of #. \nEnter the integer value of the dimensions to finish your input.\n");
+        String maze = "";
+        do {
+            maze += in.nextLine();}
+            while(!in.hasNextInt());
+        
+        int dimensions = in.nextInt();
+        //convert maze into plane object
+        Plane map = new Plane(dimensions,dimensions);
+        for(int row = 0; row < dimensions; row++)
+        {
+            for(int col = 0; col < dimensions; col++)
+            {
+                String presChar = maze.substring(0,2);
+                maze = maze.substring(2);
+                map.getIndex(col,row).setAsciiVal(presChar);
+            }
+        }
+        map.printThingWithAscii();
+        yelf = map;
+    }
+    
+
+    /** 
+     * 
+     * @return a plane maze thats mazey
+     */
+    public void generateMaze(int dimensions)
+    {
+    }
+}
