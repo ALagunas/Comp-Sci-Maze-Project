@@ -18,14 +18,20 @@ public class Maze2
     private boolean[][] west;       // is there a wall to the west of cell i,j
     private boolean[][] visited;    // has the cell i,j been visited
     private boolean done = false;   // the maze has not been solved
-    private int[] start = new int[2];
-    private int[] end = new int[2];
-    private int firstDelay;
-    private int secondDelay;
+    private int[] start;            // the coordinates of the start of the maze
+    private int[] end;              // the coordinates of the end of the maze
+    private int delay;              // the delay between drawing points
     public Maze2(int N)
     {
         // set variable N to parameter N
         this.N = N;
+        this.start = new int[2];
+        this.start[0] = 1;
+        this.start[1] = 1;
+        this.end = new int[2];
+        this.end[0] = (N + 1) / 2;
+        this.end[1] = (N + 1) / 2;
+        this.delay = 30;
         // set the size of the image to N + 2 by N + 2
         StdDraw.setXscale(0, N+2);
         StdDraw.setYscale(0, N+2);
@@ -34,6 +40,47 @@ public class Maze2
         // generate the maze, drawing not included
         generate();
     }
+
+    public Maze2(int N, int delayTime)
+    {
+        // set variable N to parameter N
+        this.N = N;
+        this.start = new int[2];
+        this.start[0] = 1;
+        this.start[1] = 1;
+        this.end = new int[2];
+        this.end[0] = (N + 1) / 2;
+        this.end[1] = (N + 1) / 2;
+        this.delay = delayTime;
+        // set the size of the image to N + 2 by N + 2
+        StdDraw.setXscale(0, N+2);
+        StdDraw.setYscale(0, N+2);
+        // initialize the maze values
+        init();
+        // generate the maze, drawing not included
+        generate();
+    }
+
+    public Maze2(int N, int delayTime, int startX, int startY, int endX, int endY)
+    {
+        // set variable N to parameter N
+        this.N = N;
+        this.start = new int[2];
+        this.start[0] = startX;
+        this.start[1] = startY;
+        this.end = new int[2];
+        this.end[0] = endX;
+        this.end[1] = endY;
+        this.delay = delayTime;
+        // set the size of the image to N + 2 by N + 2
+        StdDraw.setXscale(0, N+2);
+        StdDraw.setYscale(0, N+2);
+        // initialize the maze values
+        init();
+        // generate the maze, drawing not included
+        generate();
+    }
+
     private void init()
     {
         // initialize border cells as already visited
@@ -143,9 +190,9 @@ public class Maze2
         // draw a circle where you are with radius 0.25
         StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
         // wait 30 milliseconds before doing anything else
-        StdDraw.show(30); //30
+        StdDraw.show(delay); //30
         // reached middle which is the solution
-        if (x == N/2 && y == N/2) 
+        if (x == end[0] && y == end[1]) 
         {
             done = true;
         }
@@ -180,7 +227,7 @@ public class Maze2
         // draw a gray circle at your position with radius 0.25
         StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
         // wait 30 milliseconds before doing anything else
-        StdDraw.show(30); //30
+        StdDraw.show(delay); //30
     }
 
     // solve the maze starting from the start state
@@ -197,8 +244,8 @@ public class Maze2
         }
         // have not reached the center yet
         done = false;
-        // solve starting from the lower left
-        solve(1, 1);
+        // solve starting from the input location left
+        solve(start[0], start[1]);
     }
 
     // draw the maze
@@ -207,9 +254,9 @@ public class Maze2
         // set the drawing color to red
         StdDraw.setPenColor(StdDraw.RED);
         // draw a red circle in the center of the maze, the end
-        StdDraw.filledCircle(N/2.0 + 0.5, N/2.0 + 0.5, 0.375);
+        StdDraw.filledCircle(end[0]+ 0.5, end[1] + 0.5, 0.375);
         // draw another red circle at the bottom left, the start
-        StdDraw.filledCircle(1.5, 1.5, 0.375);
+        StdDraw.filledCircle(start[0] + 0.5, start[1] + 0.5, 0.375);
         // set the drawing color to black
         StdDraw.setPenColor(StdDraw.BLACK);
         // draw the walls of the maze
@@ -239,32 +286,51 @@ public class Maze2
                 }
             }
         }
-        // wait one second before doing anything else
-        StdDraw.show(1000); //1000
+        // wait one millisecond before doing anything else
+        StdDraw.show(1);
     }
-    
+
     // a test client
     public static void main(String[] args)
     {
         // store the input number as N
         int N = Integer.parseInt(args[0]);
         // make a new maze that is n rows by n columns
-        Maze maze = new Maze(N);
+        Maze2 maze = new Maze2(N);
         // draw the initial array of walls
-        StdDraw.show(0);
+        StdDraw.show(1);
         // draws the actual maze
         maze.draw();
         // solve the maze, including drawing (within solve)
         maze.solve();
     }
-    
+
     // second test client
     public static void main2(String[] args)
     {
+        // make a new Scanner to read inputs
         Scanner in = new Scanner(System.in);
-        System.out.println("What dimensions would you like your maze to have? ");
-        // store the input number as N
-        int N = in.nextInt();
+        // a variable to store the side length of the maze
+        int N;
+        // ask what side length the user would like
+        System.out.println("What dimensions would you like your maze to have?");
+        // tell them to enter to a positive number
+        do
+        {
+            System.out.println("Please enter a positive number.");
+            // if the input isn't a number
+            while(!in.hasNextInt())
+            {
+                // tell the user to stop being an idiot
+                System.out.println("That's not a number, dumb***");
+                // clear the input
+                in.next();
+            }
+            // store the input
+            N = in.nextInt();
+        } while(N <= 0);
+        // ^ if the input is invalid, repeat
+
         // add other inputs
         // add other inputs
         // add other inputs
@@ -272,9 +338,9 @@ public class Maze2
         // set time1 to current time
         long time1 = System.currentTimeMillis();
         // make a new maze that is n rows by n columns
-        Maze maze = new Maze(N);
+        Maze2 maze = new Maze2(N);
         // draw the initial array of walls
-        StdDraw.show(0);
+        StdDraw.show(1);
         // draws the actual maze
         maze.draw();
         // solve the maze, including drawing (within solve)
