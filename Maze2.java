@@ -125,19 +125,19 @@ public class Maze2
                     generate(x, y + 1);
                     break;
                 }
-                else if (r >= 0.25 && r < 0.50 && !visited[x+1][y])
+                else if (r < 0.50 && !visited[x+1][y])
                 {
                     east[x][y] = west[x+1][y] = false;
                     generate(x+1, y);
                     break;
                 }
-                else if (r >= 0.5 && r < 0.75 && !visited[x][y-1])
+                else if (r < 0.75 && !visited[x][y-1])
                 {
                     south[x][y] = north[x][y-1] = false;
                     generate(x, y-1);
                     break;
                 }
-                else if (r >= 0.75 && r < 1.00 && !visited[x-1][y])
+                else if (!visited[x-1][y])
                 {
                     west[x][y] = east[x-1][y] = false;
                     generate(x-1, y);
@@ -189,32 +189,34 @@ public class Maze2
         StdDraw.setPenColor(StdDraw.BLUE);
         // draw a circle where you are with radius 0.25
         StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
-        // wait 30 milliseconds before doing anything else
-        StdDraw.show(delay); //30
+        // wait a certain number of milliseconds before doing anything else
+        StdDraw.show(delay); //default was 30
         // reached middle which is the solution
         if (x == end[0] && y == end[1]) 
         {
             done = true;
         }
-        // if there is no wall to the north, go there, then solve from there
-        if (!north[x][y])
+        // go to a random neighboring cell and solve from there
+        while(true)
         {
-            solve(x, y + 1);
-        }
-        // if there is no wall to the east, go there, then solve from there
-        if (!east[x][y])
-        {
-            solve(x + 1, y);
-        }
-        // if there is no wall to the south, go there, then solve from there
-        if (!south[x][y])
-        {
-            solve(x, y - 1);
-        }
-        // if there is no wall to the west, go there, then solve from there
-        if (!west[x][y])
-        {
-            solve(x - 1, y);
+            // pick a random number between 0 and 1
+            double temp = Math.random();
+            if (temp < 0.25 && !north[x][y])
+            {
+                solve(x, y + 1);
+            }
+            else if (temp < 0.50 && !east[x][y])
+            {
+                solve(x + 1, y);
+            }
+            else if (temp < 0.75 && !south[x][y])
+            {
+                solve(x, y - 1);
+            }
+            else if (!west[x][y])
+            {
+                solve(x - 1, y);
+            }
         }
         // if this is the solution (you have reached the center), you are done
         if (done)
@@ -226,8 +228,8 @@ public class Maze2
         StdDraw.setPenColor(StdDraw.GRAY);
         // draw a gray circle at your position with radius 0.25
         StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
-        // wait 30 milliseconds before doing anything else
-        StdDraw.show(delay); //30
+        // wait a certain number of milliseconds before doing anything else
+        StdDraw.show(delay); //30 was the default
     }
 
     // solve the maze starting from the start state
@@ -317,20 +319,59 @@ public class Maze2
         // tell them to enter to a positive number
         do
         {
-            System.out.println("Please enter a positive number.");
+            System.out.println("Please enter a positive number. ");
             // if the input isn't a number
             while(!in.hasNextInt())
             {
                 // tell the user to stop being an idiot
-                System.out.println("That's not a number, dumb***");
+                System.out.println("That's not a number, dumb***. ");
                 // clear the input
                 in.next();
             }
             // store the input
             N = in.nextInt();
-        } while(N <= 0);
+        } while(N < 1);
         // ^ if the input is invalid, repeat
-
+        // a variable to store the delaytime of the maze
+        int delayTime;
+        // ask what delay time the user wants
+        System.out.println("What delay would you like to have between iterations (in milliseconds)?");
+        // tell them to enter to a positive number
+        do
+        {
+            System.out.println("Please enter a positive number. ");
+            // if the input isn't a number
+            while(!in.hasNextInt())
+            {
+                // tell the user to stop being an idiot
+                System.out.println("That's not a number, dumb***. ");
+                // clear the input
+                in.next();
+            }
+            // store the input
+            delayTime = in.nextInt();
+        } while(delayTime < 1);
+        // ^ if the input is invalid, repeat
+        // a variable to store the starting x location of the maze
+        int startXLoc;
+        // ask where the user would like the maze to start
+        System.out.println("In what row would you like to have your maze start?");
+        // tell them to enter to a positive number
+        do
+        {
+            System.out.println("Please enter a positive number. ");
+            // if the input isn't a number
+            while(!in.hasNextInt())
+            {
+                // tell the user to stop being an idiot
+                System.out.println("That's not a number, dumb***. ");
+                // clear the input
+                in.next();
+            }
+            // store the input
+            startXLoc = in.nextInt();
+        } while(startXLoc < 1 && startXLoc > N);
+        // ^ if the input is invalid, repeat
         // add other inputs
         // add other inputs
         // add other inputs
@@ -338,7 +379,7 @@ public class Maze2
         // set time1 to current time
         long time1 = System.currentTimeMillis();
         // make a new maze that is n rows by n columns
-        Maze2 maze = new Maze2(N);
+        Maze2 maze = new Maze2(N, delayTime, startXLoc, startYLoc, endXLoc, endYLoc);
         // draw the initial array of walls
         StdDraw.show(1);
         // draws the actual maze
