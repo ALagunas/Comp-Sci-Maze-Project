@@ -1,11 +1,9 @@
 import java.util.Scanner;
-import java.util.Calendar;
+import java.util.ArrayList;
 /*
  * Features to add: 
- * Chooseable start and end points
  * See how speed / average speed to solve changes with dimension. Graph average time vs dimension
  * See if we can expand past 175
- * Turn on off delay on solve and draw (1000 and 30 milliseconds)
  * Test Cory's algorithm for speed and compare
  * Possibly test broad search for speed and compare
  */
@@ -181,6 +179,7 @@ public class Maze2
         // if you have found the center or you have already visited the cell don't do anything
         if (done || visited[x][y])
         {
+            System.out.println("Reached visited cell at " + x + ", " + y + ".");
             return;
         }
         // mark this cell as visited
@@ -196,40 +195,97 @@ public class Maze2
         {
             done = true;
         }
-        // go to a random neighboring cell and solve from there
-        while(true)
-        {
-            // pick a random number between 0 and 1
-            double temp = Math.random();
-            if (temp < 0.25 && !north[x][y])
-            {
-                solve(x, y + 1);
-            }
-            else if (temp < 0.50 && !east[x][y])
-            {
-                solve(x + 1, y);
-            }
-            else if (temp < 0.75 && !south[x][y])
-            {
-                solve(x, y - 1);
-            }
-            else if (!west[x][y])
-            {
-                solve(x - 1, y);
-            }
-        }
-        // if this is the solution (you have reached the center), you are done
         if (done)
         {
             return;
         }
+        int neighbors = getNeighbors(x,y);
+        while(neighbors > 0)
+        {
+            // go to a random neighboring cell and solve from there
+            int[] exit = randomNeighbor(x, y);
+            if(done)
+            {
+                break;
+            }
+            solve(x + exit[0], y + exit[1]);
+            neighbors = getNeighbors(x, y);
+        }
+        // if this cell is the solution, you are done
+
         // if you come back to this cirle, draw a gray circle over it because it isn't in the solution
         // set the drawing color to gray
-        StdDraw.setPenColor(StdDraw.GRAY);
-        // draw a gray circle at your position with radius 0.25
-        StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
-        // wait a certain number of milliseconds before doing anything else
-        StdDraw.show(delay); //30 was the default
+        if(!done)
+        {
+            StdDraw.setPenColor(StdDraw.GRAY);
+            // draw a gray circle at your position with radius 0.25
+            StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
+            // wait a certain number of milliseconds before doing anything else
+            StdDraw.show(delay); //30 was the default
+        }
+    }
+
+    public int getNeighbors(int xLoc,int yLoc)
+    {
+        ArrayList<String> exits = new ArrayList<String>();
+        if(!north[xLoc][yLoc] && !visited[xLoc][yLoc + 1])
+        {
+            exits.add("north");
+        }
+        if(!east[xLoc][yLoc] && !visited[xLoc + 1][yLoc])
+        {
+            exits.add("east");
+        }
+        if(!south[xLoc][yLoc] && !visited[xLoc][yLoc - 1])
+        {
+            exits.add("south");
+        }
+        if(!west[xLoc][yLoc] && !visited[xLoc - 1][yLoc])
+        {
+            exits.add("west");
+        }
+        return exits.size();
+    }
+
+    public int[] randomNeighbor(int xLoc, int yLoc)
+    {
+        ArrayList<String> exits = new ArrayList<String>();
+        if(!north[xLoc][yLoc] && !visited[xLoc][yLoc + 1])
+        {
+            exits.add("north");
+        }
+        if(!east[xLoc][yLoc] && !visited[xLoc + 1][yLoc])
+        {
+            exits.add("east");
+        }
+        if(!south[xLoc][yLoc] && !visited[xLoc][yLoc - 1])
+        {
+            exits.add("south");
+        }
+        if(!west[xLoc][yLoc] && !visited[xLoc - 1][yLoc])
+        {
+            exits.add("west");
+        }
+        int index = (int)(exits.size() * Math.random());
+        int[] returnArray = {0, 0};
+        String exit = exits.get(index);
+        if(exit.equals("north"))
+        {
+            returnArray[1]++;
+        }
+        if(exit.equals("east"))
+        {
+            returnArray[0]++;
+        }
+        if(exit.equals("south"))
+        {
+            returnArray[1]--;
+        }
+        if(exit.equals("west"))
+        {
+            returnArray[0]--;
+        }
+        return returnArray;
     }
 
     // solve the maze starting from the start state
@@ -356,10 +412,10 @@ public class Maze2
         int startXLoc;
         // ask where the user would like the maze to start
         System.out.println("In what row would you like to have your maze start?");
-        // tell them to enter to a positive number
+        // tell them to enter to a valid number
         do
         {
-            System.out.println("Please enter a positive number. ");
+            System.out.println("Please enter a positive number less than the maze size ");
             // if the input isn't a number
             while(!in.hasNextInt())
             {
@@ -372,25 +428,81 @@ public class Maze2
             startXLoc = in.nextInt();
         } while(startXLoc < 1 && startXLoc > N);
         // ^ if the input is invalid, repeat
-        // add other inputs
-        // add other inputs
-        // add other inputs
-        // add other inputs
-        // set time1 to current time
-        long time1 = System.currentTimeMillis();
+        // a variable to store the starting y location of the maze
+        int startYLoc;
+        // ask where the user would like the maze to start
+        System.out.println("In what column would you like to have your maze start?");
+        // tell them to enter to a valid number
+        do
+        {
+            System.out.println("Please enter a positive number less than the maze size ");
+            // if the input isn't a number
+            while(!in.hasNextInt())
+            {
+                // tell the user to stop being an idiot
+                System.out.println("That's not a number, dumb***. ");
+                // clear the input
+                in.next();
+            }
+            // store the input
+            startYLoc = in.nextInt();
+        } while(startYLoc < 1 && startYLoc > N);
+        // ^ if the input is invalid, repeat
+        // a variable to store the starting y location of the maze
+        int endXLoc;
+        // ask where the user would like the maze to start
+        System.out.println("In what row would you like to have your maze end?");
+        // tell them to enter to a valid number
+        do
+        {
+            System.out.println("Please enter a positive number less than the maze size ");
+            // if the input isn't a number
+            while(!in.hasNextInt())
+            {
+                // tell the user to stop being an idiot
+                System.out.println("That's not a number, dumb***. ");
+                // clear the input
+                in.next();
+            }
+            // store the input
+            endXLoc = in.nextInt();
+        } while(endXLoc < 1 && endXLoc > N);
+        // ^ if the input is invalid, repeat
+        // a variable to store the starting y location of the maze
+        int endYLoc;
+        // ask where the user would like the maze to start
+        System.out.println("In what column would you like to have your maze end?");
+        // tell them to enter to a valid number
+        do
+        {
+            System.out.println("Please enter a positive number less than the maze size ");
+            // if the input isn't a number
+            while(!in.hasNextInt())
+            {
+                // tell the user to stop being an idiot
+                System.out.println("That's not a number, dumb***. ");
+                // clear the input
+                in.next();
+            }
+            // store the input
+            endYLoc = in.nextInt();
+        } while(endYLoc < 1 && endYLoc > N);
+        // ^ if the input is invalid, repeat
         // make a new maze that is n rows by n columns
         Maze2 maze = new Maze2(N, delayTime, startXLoc, startYLoc, endXLoc, endYLoc);
         // draw the initial array of walls
         StdDraw.show(1);
         // draws the actual maze
         maze.draw();
+        // set time1 to current time
+        long time1 = System.currentTimeMillis();
         // solve the maze, including drawing (within solve)
         maze.solve();
         // set time2 to current time
         long time2 = System.currentTimeMillis();
         // set timeDiff to the the difference in the two times
         long timeDiff = time2 - time1;
-        System.out.println(timeDiff/1000.0);
+        System.out.println("This maze was solved in " + timeDiff/1000.0 + " seconds.");
     }
 
 }
