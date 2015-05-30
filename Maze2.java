@@ -395,7 +395,7 @@ public class Maze2
         // tell them to enter to a positive number
         do
         {
-            System.out.println("Please enter a positive number. ");
+            System.out.println("Please enter a non-negative number. ");
             // if the input isn't a number
             while(!in.hasNextInt())
             {
@@ -406,12 +406,12 @@ public class Maze2
             }
             // store the input
             delayTime = in.nextInt();
-        } while(delayTime < 1);
+        } while(delayTime < 0);
         // ^ if the input is invalid, repeat
         // a variable to store the starting x location of the maze
         int startXLoc;
         // ask where the user would like the maze to start
-        System.out.println("In what row would you like to have your maze start?");
+        System.out.println("In what column would you like to have your maze start?");
         // tell them to enter to a valid number
         do
         {
@@ -431,7 +431,7 @@ public class Maze2
         // a variable to store the starting y location of the maze
         int startYLoc;
         // ask where the user would like the maze to start
-        System.out.println("In what column would you like to have your maze start?");
+        System.out.println("In what row would you like to have your maze start?");
         // tell them to enter to a valid number
         do
         {
@@ -451,7 +451,7 @@ public class Maze2
         // a variable to store the starting y location of the maze
         int endXLoc;
         // ask where the user would like the maze to start
-        System.out.println("In what row would you like to have your maze end?");
+        System.out.println("In what column would you like to have your maze end?");
         // tell them to enter to a valid number
         do
         {
@@ -471,7 +471,7 @@ public class Maze2
         // a variable to store the starting y location of the maze
         int endYLoc;
         // ask where the user would like the maze to start
-        System.out.println("In what column would you like to have your maze end?");
+        System.out.println("In what row would you like to have your maze end?");
         // tell them to enter to a valid number
         do
         {
