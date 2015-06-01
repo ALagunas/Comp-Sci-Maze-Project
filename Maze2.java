@@ -123,19 +123,19 @@ public class Maze2
                     generate(x, y + 1);
                     break;
                 }
-                else if (r < 0.50 && !visited[x+1][y])
+                else if (r >= 0.25 && r < 0.50 && !visited[x+1][y])
                 {
                     east[x][y] = west[x+1][y] = false;
                     generate(x+1, y);
                     break;
                 }
-                else if (r < 0.75 && !visited[x][y-1])
+                else if (r >= 0.5 && r < 0.75 && !visited[x][y-1])
                 {
                     south[x][y] = north[x][y-1] = false;
                     generate(x, y-1);
                     break;
                 }
-                else if (!visited[x-1][y])
+                else if (r >= 0.75 && r < 1.00 && !visited[x-1][y])
                 {
                     west[x][y] = east[x-1][y] = false;
                     generate(x-1, y);
