@@ -19,6 +19,8 @@ public class Maze2
     private int[] start;            // the coordinates of the start of the maze
     private int[] end;              // the coordinates of the end of the maze
     private int delay;              // the delay between drawing points
+    private int stepsTaken;         // the number of steps that the solver took to solve the maze
+    private int pathLength;         // the length of the path between the start and end points
     public Maze2(int N)
     {
         // set variable N to parameter N
@@ -30,6 +32,8 @@ public class Maze2
         this.end[0] = (N + 1) / 2;
         this.end[1] = (N + 1) / 2;
         this.delay = 30;
+        this.stepsTaken = 0;
+        this.pathLength = 0;
         // set the size of the image to N + 2 by N + 2
         StdDraw.setXscale(0, N+2);
         StdDraw.setYscale(0, N+2);
@@ -50,6 +54,8 @@ public class Maze2
         this.end[0] = (N + 1) / 2;
         this.end[1] = (N + 1) / 2;
         this.delay = delayTime;
+        this.stepsTaken = 0;
+        this.pathLength = 0;
         // set the size of the image to N + 2 by N + 2
         StdDraw.setXscale(0, N+2);
         StdDraw.setYscale(0, N+2);
@@ -70,6 +76,8 @@ public class Maze2
         this.end[0] = endX;
         this.end[1] = endY;
         this.delay = delayTime;
+        this.stepsTaken = 0;
+        this.pathLength = 0;
         // set the size of the image to N + 2 by N + 2
         StdDraw.setXscale(0, N+2);
         StdDraw.setYscale(0, N+2);
@@ -184,6 +192,8 @@ public class Maze2
         }
         // mark this cell as visited
         visited[x][y] = true;
+        stepsTaken++;
+        pathLength++;
         // set the drawing color to blue
         StdDraw.setPenColor(StdDraw.BLUE);
         // draw a circle where you are with radius 0.25
@@ -212,7 +222,6 @@ public class Maze2
             neighbors = getNeighbors(x, y);
         }
         // if this cell is the solution, you are done
-
         // if you come back to this cirle, draw a gray circle over it because it isn't in the solution
         // set the drawing color to gray
         if(!done)
@@ -222,6 +231,8 @@ public class Maze2
             StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
             // wait a certain number of milliseconds before doing anything else
             StdDraw.show(delay); //30 was the default
+            stepsTaken++;
+            pathLength--;
         }
     }
 
@@ -349,7 +360,7 @@ public class Maze2
     }
 
     // a test client
-    public static void main(String[] args)
+    public static void main2(String[] args)
     {
         // store the input number as N
         int N = Integer.parseInt(args[0]);
@@ -364,7 +375,7 @@ public class Maze2
     }
 
     // second test client
-    public static void main2(String[] args)
+    public static void main(String[] args)
     {
         // make a new Scanner to read inputs
         Scanner in = new Scanner(System.in);
@@ -372,6 +383,7 @@ public class Maze2
         int N;
         // ask what side length the user would like
         System.out.println("What dimensions would you like your maze to have?");
+        System.out.println("WARNING: Mazes larger than 125 by 125 are unlikely to generate.");
         // tell them to enter to a positive number
         do
         {
@@ -503,6 +515,8 @@ public class Maze2
         // set timeDiff to the the difference in the two times
         long timeDiff = time2 - time1;
         System.out.println("This maze was solved in " + timeDiff/1000.0 + " seconds.");
+        System.out.println("This maze was solved in " + (maze.stepsTaken - 1) + " steps.");
+        System.out.println("The length of the solution was " + (maze.pathLength - 1) + " steps.");
     }
 
 }
