@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Arrays;
 /*
  * Features to add: 
  * See how speed / average speed to solve changes with dimension. Graph average time vs dimension
@@ -360,7 +361,7 @@ public class Maze2
     }
 
     // a test client
-    public static void main2(String[] args)
+    public static void main(String[] args)
     {
         // store the input number as N
         int N = Integer.parseInt(args[0]);
@@ -375,7 +376,7 @@ public class Maze2
     }
 
     // second test client
-    public static void main(String[] args)
+    public static void main2(String[] args)
     {
         // make a new Scanner to read inputs
         Scanner in = new Scanner(System.in);
@@ -519,4 +520,72 @@ public class Maze2
         System.out.println("The length of the solution was " + (maze.pathLength - 1) + " steps.");
     }
 
+    public static double[][] main3(int[] args)
+    {
+        int N = args[0];
+        int times = args[1];
+        Maze2 test;
+        double[][] returnArray = new double[times][3];
+        for(int i  = 0; i < times; i++)
+        {
+            test = new Maze2(N, 0, 1, 1, N, N);
+            test.draw();
+            long time1 = System.currentTimeMillis();
+            test.solve();
+            long time2 = System.currentTimeMillis();
+            long timeDiff = time2 - time1;
+            returnArray[i][0] = timeDiff/ 1000.0;
+            returnArray[i][1] = test.stepsTaken - 1;
+            returnArray[i][2] = test.pathLength - 1;
+        }
+        for(int i = 0; i < times; i++)
+        {
+            System.out.println(Arrays.toString(returnArray[i]));
+        }
+        return returnArray;
+    }
+    
+    public static void main4(String[] args)
+    {
+        int min = 10;
+        int max = 100;
+        int change = 10;
+        int times = 3;
+        int sizes = (max - min) / change;
+        double[][][] complicated = new double[sizes][times][3];
+        int[] temp = new int[2];
+        double[][] data = new double[sizes][3];
+        temp[1] = times;
+        for(int i = min; i < max; i+= change)
+        {
+            temp[0] = i;
+            complicated[(i - min) / change] = main3(temp);
+        }
+        for(int i = min; i < max; i += change)
+        {
+            double totalTime = 0;
+            for(int j = 0; j < times; j++)
+            {
+                totalTime += complicated[(i - min) / change][j][0];
+            }
+            double totalSteps = 0;
+            for(int k = 0; k < times; k++)
+            {
+                totalSteps += complicated[(i - min) / change][k][1];
+            }
+            double totalPath = 0;
+            for(int l = 0; l < times; l++)
+            {
+                totalPath += complicated[(i - min) / change][l][2];
+            }
+            data[(i - min) / change][0] = Math.round(totalTime / times * 1000.0) / 1000.0;
+            data[(i - min) / change][1] = Math.round(totalSteps / times * 1000.0) / 1000.0;
+            data[(i - min) / change][2] = Math.round(totalPath / times * 1000.0) / 1000.0;
+        }
+        for(int i = min; i < max; i += change)
+        {
+            String returnValue = "" + i;
+            System.out.println(returnValue + Arrays.toString(data[(i - min) / change]));
+        }
+    }
 }
