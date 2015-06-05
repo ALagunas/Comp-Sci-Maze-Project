@@ -1,0 +1,490 @@
+import java.util.Scanner;
+import java.util.Arrays;
+import java.util.ArrayList;
+/**
+ * Solves a maze with the a* algorithm
+ * 
+ * @author Cory
+ * @version 2015
+ */
+public class AStarish
+{
+    private Node[][] maze;
+    private int startx;
+    private int starty;
+    private int endx;
+    private int endy;
+    private Node end;
+    private ArrayList<Node> solution;
+
+    /**
+     * Solves a maze
+     * 
+     * @param  y   a sample parameter for a method
+     * @return     the sum of x and y 
+     */
+    /*
+    public void main()
+    {
+    Scanner in = new Scanner(System.in);
+    System.out.println("Aight hook it up with the dimensions of your maze");
+    int dimension = in.nextInt();
+    System.out.println("Thx, lemme generate a maze rly quick");
+    //generate a maze
+    maze = new Node[dimension][dimension];
+
+    System.out.println("'kay where do you wanna start? (x first)");
+    startx = in.nextInt();
+    System.out.println("now your y plz");
+    starty = in.nextInt();
+    System.out.println("where do you wanna end? (x first)");
+    endx = in.nextInt();
+    System.out.println("now y");
+    endy = in.nextInt();
+    System.out.println("cool, check out the solution (the nodes):\n");
+    long time = System.currentTimeMillis();
+    end = new Node(endx,endy,"end");
+
+    //NOW LET'S DO IT
+    for(int row = 0; row < maze.length; row++)
+    {
+    for(int col = 0; col < maze.length; col++)
+    {
+    maze[row][col] = new Node(row,col,"");
+    }
+    }
+    // first give an heuristic to each node
+    // start at (startx, starty)
+    // end at (endx, endy)
+    boolean reached = false;
+    int nextx = startx;
+    int nexty = starty;
+    Node presentNode = new Node(startx,starty,"start");
+    ArrayList<Node> visited = new ArrayList<Node>();
+    ArrayList<Node> path = new ArrayList<Node>();
+    path.add(presentNode);
+    while(!reached)
+    {
+    Node[] adjacentValues = getAdjacent(presentNode);
+    int[] heuristics = getHeuristics(adjacentValues);
+    //find best heuristic
+    int best = heuristics[0];
+    for(int i = 0; i < heuristics.length; i++)
+    {
+    if(best > heuristics[i])
+    {
+    best = heuristics[i];
+    }
+    }
+    //find all the nodes with that heuristic
+    ArrayList<Node> possible = new ArrayList<Node>();
+    for(int i = 0; i < heuristics.length; i++)
+    {
+    if(best == heuristics[i])
+    {
+    possible.add(adjacentValues[i]);
+    }
+    }
+    for(int pospos = 0; pospos < possible.size(); pospos++)
+    {
+    for(int vispos = 0; vispos < visited.size(); vispos++)
+    {
+    if(visited.get(vispos).equals(possible.get(pospos)))
+    {
+    possible.remove(pospos);
+    }
+    }
+    }
+    Node nextNode = possible.get(0);
+    if(nextNode.getX() < presentNode.getX())
+    {
+    nextNode.setParent("left");
+    }
+    if(nextNode.getX() > presentNode.getX())
+    {
+    nextNode.setParent("right");
+    }
+    if(nextNode.getY() < presentNode.getY())
+    {
+    nextNode.setParent("up");
+    }
+    if(nextNode.getY() > presentNode.getY())
+    {
+    nextNode.setParent("down");
+    }
+    path.add(nextNode);
+    presentNode = nextNode;
+    if(presentNode.getX() == end.getX() && presentNode.getY() == end.getY())
+    {
+    reached = true;
+    }
+    }
+    long done = System.currentTimeMillis();
+    System.out.println( done - time);
+    System.out.println(path.toString());
+    }
+     */
+
+    /**
+     * Solves a maze
+     * 
+     * @param  y   a sample parameter for a method
+     * @return     the sum of x and y 
+     */
+    /*
+    public void main2()
+    {
+    Scanner in = new Scanner(System.in);
+    System.out.println("Aight hook it up with the dimensions of your maze");
+    int dimension = in.nextInt();
+    System.out.println("Thx, lemme generate a maze rly quick");
+    //generate a maze
+    maze = new Node[dimension][dimension];
+
+    System.out.println("'kay where do you wanna start? (x first)");
+    startx = in.nextInt();
+    System.out.println("now your y plz");
+    starty = in.nextInt();
+    System.out.println("where do you wanna end? (x first)");
+    endx = in.nextInt();
+    System.out.println("now y");
+    endy = in.nextInt();
+    System.out.println("cool, check out the solution (the nodes):\n");
+    long time = System.currentTimeMillis();
+    end = new Node(endx,endy,"end");
+
+    //NOW LET'S DO IT
+    for(int row = 0; row < maze.length; row++)
+    {
+    for(int col = 0; col < maze.length; col++)
+    {
+    maze[row][col] = new Node(row,col,"");
+    }
+    }
+    // first give an heuristic to each node
+    // start at (startx, starty)
+    // end at (endx, endy)
+    boolean reached = false;
+    boolean first = true;
+    Node presentNode = new Node(startx,starty,"start");
+    //visited nodes
+    ArrayList<Node> visited = new ArrayList<Node>();
+    //list storing lists of paths
+    ArrayList<ArrayList<Node>> paths = new ArrayList<ArrayList<Node>>();
+    //int with the present path
+    int presentPath = 0;
+    while(!reached)
+    {
+    if(first){
+    Node[] adj = getAdjacent(presentNode);
+    int[] heuristics = getHeuristics(adj);
+    //position of best
+    int j = 0;
+    int best = heuristics[0];
+    for(int i = 0; i < heuristics.length; i++)
+    {
+    if(heuristics[i] < best)
+    {
+    best = heuristics[i];
+    j = i;
+    }
+    }
+    paths.add(new ArrayList<Node>());
+    paths.get(presentPath).add(adj[j]);
+    first = !first;
+    }
+    else
+    {
+    Node[] adj = getAdjacent(presentNode);
+    int[] heuristics = getHeuristics(adj);
+    //position of best
+    int posOfBest = 0;
+    int best = heuristics[0];
+    for(int i = 0; i < heuristics.length; i++)
+    {
+    if(heuristics[i] < best)
+    {
+    best = heuristics[i];
+    posOfBest = i;
+    }
+    }
+    //sums of all paths' heuristics
+    int[] sums = new int[paths.size()];
+    for(int i = 0; i < paths.size(); i++)
+    {
+    for(int j = 0; j < paths.get(i).size(); j++)
+    {
+    sums[i]+= getHeuristic(paths.get(i).get(j));
+    }
+    }
+    //so now... i need to... do something probably
+    int smallest = sums[0];
+    for(int i = 0; i < sums.length;i++)
+    {
+    if(sums[i] < smallest)
+    {
+    smallest = sums[i];
+    }
+    }
+    if(sums[presentPath] + best < smallest)
+    {
+    paths.get(presentPath).add(adj[posOfBest]);
+    presentNode = adj[posOfBest];
+    }
+    else
+    {
+
+    }
+    }
+    }
+    }
+     */
+    /**
+     * Solves a maze
+     * 
+     * @param  y   a sample parameter for a method
+     * @return     the sum of x and y 
+     */
+    public void main()
+    {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Aight what will the dimensions of your maze be?");
+        int dimension = in.nextInt();
+        System.out.println("Thanks, lemme generate a maze really quick");
+        //generate a maze
+        maze = new Node[dimension][dimension];
+        for(int row = 0; row < maze.length; row++)
+        {
+            for(int col = 0; col < maze.length; col++)
+            {
+                maze[row][col] = new Node(row,col,null);
+            }
+        }
+
+        System.out.println("okay where do you wanna start? (x first)");
+        startx = in.nextInt();
+        System.out.println("now your y please");
+        starty = in.nextInt();
+        System.out.println("where do you wanna end? (x first)");
+        endx = in.nextInt();
+        System.out.println("now y");
+        endy = in.nextInt();
+        System.out.println("Barrier? 1 = y 2 = n");
+        int barrier = in.nextInt();
+        if(barrier == 1)
+        {
+            boolean done = false;
+            while(!done){
+                System.out.println("ok so put in an x");
+                int y = in.nextInt();
+                System.out.println("now put in an y");
+                int x = in.nextInt();
+                maze[x][y] = new Node(-1,-1,null);
+                System.out.println("keep going? 1 = y 2 = n");
+                int n = in.nextInt();
+                if(n == 2)
+                {
+                    done = true;
+                }
+            }
+            
+        }
+        System.out.println("cool, check out the solution (the nodes):\n");
+        end = new Node(endx,endy, null);
+        Node start = new Node(startx,starty,null);
+        ArrayList<Node> open = new ArrayList<Node>();
+        ArrayList<Node> closed = new ArrayList<Node>();
+        boolean solved = false;
+        Node present = new Node(startx,starty,null);
+        present.setHeuristic(getHeuristic(present));
+        present.setF(getHeuristic(present));
+
+        while(!solved)
+        {
+            Node[] adjacent = getAdjacent(present);
+            for(int i = 0; i < adjacent.length; i++)
+            {
+                if(adjacent[i].getX() != -1){
+                    if(!contains(open,adjacent[i]) && !contains(closed,adjacent[i]))
+                    {
+                        adjacent[i].parent(present);
+                        adjacent[i].setHeuristic(getHeuristic(adjacent[i]));
+                        adjacent[i].setF(present.getF());
+                        open.add(adjacent[i]);
+                    }
+                }
+            }
+            int smallest = open.get(0).getF();
+            //position of smallest
+            int pos = 0;
+            for(int i = 0; i < open.size(); i++)
+            {
+                if(open.get(i).getF() < smallest)
+                {
+                    pos = i;
+                }
+            }
+            present = open.get(pos);
+            if(present.getHeuristic() == 1)
+            {
+                solved = true;
+                end.parent(present);
+            }
+
+            closed.add(open.get(pos));
+            open.remove(pos);
+        }
+        solution = new ArrayList<Node>();
+        solution.add(end);
+        solution.add(present);
+        System.out.println(end.toString());
+        System.out.println(present.toString());
+        boolean done = false;
+        while(!done)
+        {
+            solution.add(present.getParent());
+            System.out.println(present.getParent().toString());
+            present = present.getParent();
+            if(present.getX() == startx && present.getY() == starty)
+            {
+                done = true;
+            }
+        }
+        System.out.println(solution.toString());
+    }
+
+    /**
+     * @return     Get adjacent values to present returned in an array of Node
+     */
+    public Node[] getAdjacent(Node present)
+    {
+        Node[] returnArr = new Node[4];
+        int x = present.getX();
+        int y = present.getY();
+        //Node topLeft = null;
+        Node topMid = null;
+        //Node topRight = null;
+        Node midLeft = null;
+        Node midRight = null;
+        //Node botLeft = null;
+        Node botMid = null;
+        //Node botRight = null;
+        if(x == 0){
+            ////topLeft = new Node(-1,-1,"wall");
+            //returnArr[0] = topLeft;
+            midLeft = new Node(-1,-1,null);;
+            returnArr[1] = midLeft;
+            //botLeft = new Node(-1,-1,"wall");;
+            //returnArr[5] = botLeft;
+        }
+        if(y == 0){
+            //topLeft = new Node(-1,-1,"wall");;
+            //returnArr[0] = topLeft;
+            topMid = new Node(-1,-1,null);;
+            returnArr[0] = topMid;
+            //topRight = new Node(-1,-1,"wall");;
+            //returnArr[2] = topRight;
+        }
+        if(x == maze.length-1){
+            //topRight = new Node(-1,-1,"wall");;
+            //returnArr[0] = topRight;
+            midRight = new Node(-1,-1,null);;
+            returnArr[2] = midRight;
+            //botRight = new Node(-1,-1,"wall");;
+            //returnArr[5] = botRight;
+        }
+        if(y == maze.length-1){
+            //botLeft = new Node(-1,-1,"wall");;
+            //returnArr[0] = botLeft;
+            botMid = new Node(-1,-1,null);;
+            returnArr[3] = botMid;
+            //botRight = new Node(-1,-1,"wall");;
+            //returnArr[2] = botRight;
+        }
+        for(int i = 0; i < 7; i++)
+        {
+            //if(topLeft == null){
+            //  topLeft = maze[x-1][y-1];
+            //returnArr[0] = topLeft;}
+            if(topMid== null){
+                topMid = maze[x][y-1];
+                returnArr[0] = topMid;}
+            //if(topRight== null){
+            //  topRight = maze[x+1][y-1];
+            //returnArr[2] = topRight;}
+            if(midLeft== null){
+                midLeft = maze[x-1][y];
+                returnArr[1] = midLeft;}
+            if(midRight== null){
+                midRight = maze[x+1][y];
+                returnArr[2] = midRight;}
+            //if(botLeft== null){
+            //  botLeft = maze[x-1][y+1];
+            //returnArr[5] = botLeft;}
+            if(botMid== null){
+                botMid = maze[x][y+1];
+                returnArr[3] = botMid;}
+            //if(botRight== null){
+            //  botRight = maze[x+1][y+1];
+            //returnArr[7] = botRight;}
+        }
+        return returnArr;
+
+    }
+
+    /**
+     * @return     Get heuristics returned in an array of Node
+     */
+    public int[] getHeuristics(Node[] input)
+    {
+        int[] returnArr = new int[input.length];
+        for(int i = 0; i < input.length; i++)
+        {
+            if(input[i] != null){
+                returnArr[i] = Math.abs((end.getX()-input[i].getX())) + Math.abs((end.getY()-input[i].getY()));
+            }
+            else{ returnArr[i] = Integer.MAX_VALUE;}
+        }
+        return returnArr;
+    }
+
+    /**
+     * @return     Get heuristics returned in an array of Node
+     */
+    public int getHeuristic(Node input)
+    {
+        int output = Integer.MAX_VALUE;
+        if(input != null){
+            output= Math.abs((end.getX()-input.getX())) + Math.abs((end.getY()-input.getY()));
+        }
+
+        return output;
+    }
+
+    public int[] getSums(ArrayList<ArrayList<Node>> input)
+    {
+        int[] retur = new int[input.size()];
+        for(int outer = 0; outer < input.size(); outer++)
+        {
+            int sumNow = 0;
+            for(int inner = 0; inner < input.get(outer).size(); inner++)
+            {
+                sumNow += getHeuristic(input.get(outer).get(inner));
+            }
+            retur[outer] = sumNow;
+        }
+        return retur;
+    }
+
+    public boolean contains(ArrayList<Node> list, Node check)
+    {
+        for(int i = 0; i < list.size(); i++)
+        {
+            if(list.get(i).equals(check))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
