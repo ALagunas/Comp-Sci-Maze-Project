@@ -1,0 +1,128 @@
+/**
+ * A* node
+ * 
+ * @author Cory A
+ * @version 2015
+ */
+/*
+public class Node
+{
+private String parent;
+private int x;
+private int y;
+private boolean isWall;
+private int heuristic;*/
+/*
+/**
+ * Constructor for objects of class node
+ */
+/*
+public Node(int x, int y, String parent)
+{
+this.x = x;
+this.y = y;
+this.parent = parent;
+}
+
+/**
+ * @return     returns the direction of the parent node
+ */
+/*public String getParent()
+{
+return parent;
+}
+
+/**
+ * @return     sets the direction of the parent node
+ */
+/*
+public void setParent(String in)
+{
+parent = in;
+}
+
+/**
+ * @return     returns the y value of the node
+ */
+/*
+public int getX()
+{
+return x;
+}
+
+/**
+ * @return     returns the y value of the node
+ */
+/*
+public int getY()
+{
+return y;
+}
+
+public String toString()
+{
+return "(" + getX() + ", " + getY() + ")";
+}
+
+public void setHeuristic()
+{
+
+}*/
+public class Node
+{
+    private Node parent;
+    private int x;
+    private int y;
+    private int heuristic;
+    private int f;
+    public Node(int x, int y, Node parent)
+    {
+        this.x = x;
+        this.y = y;
+        this.parent = parent;
+    }
+
+    public void setHeuristic(int in)
+    {
+        heuristic = in;
+    }
+
+    public int getHeuristic()
+    {
+        return heuristic;
+    }
+    
+    public void setF(int in)
+    {
+        f = heuristic + in;
+    }
+    
+    public int getF()
+    {
+        return f;
+    }
+    public String toString()
+    {
+        return "(" + x + ", " + y + ")";
+    }
+    
+    public int getX()
+    {
+        return x;
+    }
+    
+    public int getY()
+    {
+        return y;
+    }
+    
+    public void parent(Node in)
+    {
+        parent = in;
+    }
+    
+    public Node getParent()
+    {
+        return parent;
+    }
+}
