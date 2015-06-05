@@ -526,6 +526,7 @@ public class Maze2
         int times = args[1];
         Maze2 test;
         double[][] returnArray = new double[times][3];
+        System.out.print(N + " ... ");
         for(int i  = 0; i < times; i++)
         {
             test = new Maze2(N, 0, 1, 1, N, N);
@@ -538,9 +539,10 @@ public class Maze2
             returnArray[i][1] = test.stepsTaken - 1;
             returnArray[i][2] = test.pathLength - 1;
         }
+        System.out.println("Complete");
         for(int i = 0; i < times; i++)
         {
-            System.out.println(Arrays.toString(returnArray[i]));
+            //System.out.println(Arrays.toString(returnArray[i]));
         }
         return returnArray;
     }
@@ -550,18 +552,18 @@ public class Maze2
         int min = 10;
         int max = 100;
         int change = 10;
-        int times = 3;
-        int sizes = (max - min) / change;
+        int times = 10;
+        int sizes = (max - min) / change + 1;
         double[][][] complicated = new double[sizes][times][3];
         int[] temp = new int[2];
         double[][] data = new double[sizes][3];
         temp[1] = times;
-        for(int i = min; i < max; i+= change)
+        for(int i = min; i <= max; i+= change)
         {
             temp[0] = i;
             complicated[(i - min) / change] = main3(temp);
         }
-        for(int i = min; i < max; i += change)
+        for(int i = min; i <= max; i += change)
         {
             double totalTime = 0;
             for(int j = 0; j < times; j++)
@@ -582,7 +584,7 @@ public class Maze2
             data[(i - min) / change][1] = Math.round(totalSteps / times * 1000.0) / 1000.0;
             data[(i - min) / change][2] = Math.round(totalPath / times * 1000.0) / 1000.0;
         }
-        for(int i = min; i < max; i += change)
+        for(int i = min; i <= max; i += change)
         {
             String returnValue = "" + i;
             System.out.println(returnValue + Arrays.toString(data[(i - min) / change]));
