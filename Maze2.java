@@ -525,7 +525,7 @@ public class Maze2
         int N = args[0];
         int times = args[1];
         Maze2 test;
-        double[][] returnArray = new double[times][3];
+        double[][] returnArray = new double[times][4];
         System.out.print(N + " ... ");
         for(int i  = 0; i < times; i++)
         {
@@ -538,6 +538,8 @@ public class Maze2
             returnArray[i][0] = timeDiff/ 1000.0;
             returnArray[i][1] = test.stepsTaken - 1;
             returnArray[i][2] = test.pathLength - 1;
+            returnArray[i][3] = returnArray[i][1] / returnArray[i][2];
+            System.out.print(i);
         }
         System.out.println("Complete");
         for(int i = 0; i < times; i++)
@@ -554,10 +556,12 @@ public class Maze2
         int change = 10;
         int times = 10;
         int sizes = (max - min) / change + 1;
-        double[][][] complicated = new double[sizes][times][3];
+        double[][][] complicated = new double[sizes][times][4];
         int[] temp = new int[2];
-        double[][] data = new double[sizes][3];
+        double[][] data = new double[sizes][4];
         temp[1] = times;
+        double superTotalTime = 0;
+        int superTOtalSteps = 0;
         for(int i = min; i <= max; i+= change)
         {
             temp[0] = i;
@@ -580,14 +584,27 @@ public class Maze2
             {
                 totalPath += complicated[(i - min) / change][l][2];
             }
+            double totalEfficiency = 0;
+            for(int m = 0; m < times; m++)
+            {
+                totalEfficiency += complicated[(i - min) / change][m][3];
+            }
+            superTotalTime += totalTime;
+            superTotalSteps += totalSteps;
             data[(i - min) / change][0] = Math.round(totalTime / times * 1000.0) / 1000.0;
             data[(i - min) / change][1] = Math.round(totalSteps / times * 1000.0) / 1000.0;
             data[(i - min) / change][2] = Math.round(totalPath / times * 1000.0) / 1000.0;
+            data[(i - min) / change][3] = Math.round(totalEfficiency / times * 1000.0) / 1000.0;
+            
         }
         for(int i = min; i <= max; i += change)
         {
-            String returnValue = "" + i;
-            System.out.println(returnValue + Arrays.toString(data[(i - min) / change]));
+            System.out.println("Mazes of size " + i + " took on average " + data[(i - min) / change][0]
+            + " seconds to solve, " + data[(i - min) / change][1] + " steps to solve " + " and had an average "
+            + "path length of " + data[(i - min) / change][2] + " steps." " Their solving efficiency was, on average "
+            + (100.0 * data[(i - min) / change][3]) + "%.");
         }
+        double clockSpeed = Math.round(totalSteps/totalTime * Math.pow(10, 10)) / Math.pow(10, 10); 
+        System.out.println("One maze solving step takes about" + clockSpeed);
     }
 }
