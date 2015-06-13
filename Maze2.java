@@ -21,7 +21,7 @@ public class Maze2
     private int[] start;            // the coordinates of the start of the maze
     private int[] end;              // the coordinates of the end of the maze
     private int delay;              // the delay between drawing points
-    private int stepsTaken;  a       // the number of steps that the solver took to solve the maze
+    private int stepsTaken;         // the number of steps that the solver took to solve the maze
     private int pathLength;         // the length of the path between the start and end points
     
     public Maze2(int N)
